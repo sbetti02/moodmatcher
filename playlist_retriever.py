@@ -1,7 +1,7 @@
 import requests
 
 from spotify_lib import connect, get_header
-
+from utils import get_paginated_results
 
 
 def get_song():
@@ -11,21 +11,26 @@ def get_song():
         headers=get_header())
     return response
 
-def get_playlists():
-    connect()
-    category_id = 'party'
-    response = requests.get(
-        f'https://api.spotify.com/v1/browse/categories/{category_id}/playlists',
-        headers=get_header())
-    import pdb
-    pdb.set_trace()
-    return response
+def get_playlists(category):
+    """
+    Get the playlists for a particular category
 
-def get_categories():
+    NOTE: Current limitation: Only returns playlists owned by the official
+          Spotify account
+    """
     connect()
-    response = requests.get(
-        'https://api.spotify.com/v1/browse/categories',
-        headers=get_header())
-    import pdb
-    pdb.set_trace()
-    return response
+    results = get_paginated_results(
+        f'https://api.spotify.com/v1/browse/categories/{category}/playlists',
+        'playlists')
+    return results
+
+def get_all_categories():
+    """
+    Get all of the spotify category IDs.
+    """
+    connect()
+    categories = get_paginated_results(
+        'https://api.spotify.com/v1/browse/categories', 'categories')
+    category_ids = [cat['id'] for cat in categories]
+    return category_ids
+
