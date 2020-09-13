@@ -42,4 +42,4 @@ def get_header():
     global ACCESS_TOKEN
     if ACCESS_TOKEN is None:
         raise AuthError('Access token is None!')
-    return {'Authorization': ACCESS_TOKEN}
+    return {'Authorization': f'Bearer {ACCESS_TOKEN}'}
