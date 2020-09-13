@@ -12,16 +12,15 @@ def get_song():
     return response
 
 
-def get_song_ids_in_playlist(playlist_id):
+def get_tracks_in_playlist(playlist_id):
     """
-    Get all the song IDs for a particular playlist, return
+    Get all the track dicts for a particular playlist, return
     in flat list
     """
     connect()
     results = get_paginated_results(
         f'https://api.spotify.com/v1/playlists/{playlist_id}/tracks')
-    song_ids = [track_meta['track']['id'] for track_meta in results]
-    return song_ids
+    return results
 
 
 def get_playlists(category):
@@ -39,8 +38,17 @@ def get_playlists(category):
 
 
 def get_all_songs_in_category(category):
-    pass
-
+    """
+    Given a particular category, grab all of the songs in playlists
+    for that category
+    """
+    connect()
+    playlists = get_playlists(category)
+    playlist_ids = [playlist['id'] for playlist in playlists]
+    category_tracks = []
+    for play_id in playlist_ids:
+        category_tracks.extend(get_tracks_in_playlist(play_id))
+    return category_tracks
 
 
 def get_all_categories():
