@@ -3,7 +3,7 @@ import requests
 from spotify_lib import get_header
 
 
-def get_paginated_results(url, obj_type):
+def get_paginated_results(url, obj_type=None):
     """
     For spotify results that require pagination to get the full
     list, just provide the url and this function will deal with any
@@ -12,15 +12,21 @@ def get_paginated_results(url, obj_type):
 
     The obj_type parameter is used for the outer encasing of
     the response objects, as seems common in the responses
-    I've seen so far from the Spotify API
+    I've seen so far from the Spotify API.
+    This doesn't appear to always be necessary, so I've set the default
+    case to None to account for that.
     """
     results = []
     headers = get_header()
     while url:
         response = requests.get(url, headers=headers)
         resp_json = response.json()
-        resp_items = resp_json[obj_type]['items']
+        if obj_type:
+            resp_info = resp_json[obj_type]
+        else:
+            resp_info = resp_json
+        resp_items = resp_info['items']
         if resp_items:
             results.extend(resp_items)
-        url = resp_json[obj_type]['next']
+        url = resp_info['next']
     return results

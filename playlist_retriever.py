@@ -11,6 +11,19 @@ def get_song():
         headers=get_header())
     return response
 
+
+def get_song_ids_in_playlist(playlist_id):
+    """
+    Get all the song IDs for a particular playlist, return
+    in flat list
+    """
+    connect()
+    results = get_paginated_results(
+        f'https://api.spotify.com/v1/playlists/{playlist_id}/tracks')
+    song_ids = [track_meta['track']['id'] for track_meta in results]
+    return song_ids
+
+
 def get_playlists(category):
     """
     Get the playlists for a particular category
@@ -23,6 +36,12 @@ def get_playlists(category):
         f'https://api.spotify.com/v1/browse/categories/{category}/playlists',
         'playlists')
     return results
+
+
+def get_all_songs_in_category(category):
+    pass
+
+
 
 def get_all_categories():
     """
