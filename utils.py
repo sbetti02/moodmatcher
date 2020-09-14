@@ -30,3 +30,12 @@ def get_paginated_results(url, obj_type=None):
             results.extend(resp_items)
         url = resp_info['next']
     return results
+
+
+def make_chunks(lst, n):
+    """
+    For query param searches where the number of items
+    you can search for at once is limited
+    """
+    for i in range(0, len(lst), n):
+        yield lst[i:i+n]
