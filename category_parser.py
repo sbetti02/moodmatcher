@@ -48,7 +48,16 @@ def parse_track_ids_from_metadata(tracks):
     Take the track metadata and pull out the actual ids
     into a list
     """
-    return [track['track']['id'] for track in tracks]
+
+    track_ids = []
+    for track in tracks:
+        if not track.get('track'):
+            continue
+        track_id = track['track']['id']
+        track_ids.append(track_id)
+    if not track_ids:
+        raise ValueError
+    return track_ids
 
 
 def get_tracks_audio_features(track_ids):
