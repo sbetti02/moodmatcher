@@ -103,3 +103,26 @@ def write_all_category_audio_features(overwrite=False):
             print(f'Skipping {category}')
             continue
         write_category_tracks_audio_features(category, overwrite)
+
+
+def read_audio_features_for_category(category):
+    file_path = f'{AUDIO_FEATURES_DIR}/{category}.csv'
+    if not os.path.isfile(file_path):
+        raise FileNotFoundError(file_path)
+
+    df = pd.read_csv(file_path)
+    return df
+
+
+def read_all_category_audio_features():
+    categories = read_categories()
+    all_category_audio_feats = {}
+    for category in categories:
+        if category in UNAVAILABLE_CATEGORIES:
+            print(f'Skipping {category}')
+            continue
+        audio_feats = read_audio_features_for_category(category)
+        print(audio_feats)
+        all_category_audio_feats[category] = audio_feats
+    return all_category_audio_feats
+
