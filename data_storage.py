@@ -82,6 +82,11 @@ def read_categories():
 
 
 def get_category_audio_tracks_df(category):
+    """
+    For a particular category, grab the audio features for
+    tracks in that category and return it in a dataframe
+    """
+
     tracks_audio_features = get_tracks_audio_features_from_category(category)
     unneeded_fields = ['type', 'uri', 'track_href', 'analysis_url']
     for track_audio_features in tracks_audio_features:
@@ -103,6 +108,10 @@ def write_category_tracks_audio_features(category, overwrite=False):
 
 
 def get_category_general_track_info(category):
+    """
+    For a particular category, grab the general info for
+    tracks in that category and return it in a dataframe
+    """
     print(f'Getting general track info for {category}')
     tracks = get_all_songs_in_category(category)
     tracks_info = [track['track'] for track in tracks]
@@ -120,21 +129,14 @@ def get_category_general_track_info(category):
     return df
 
 
-def add_data_to_stored_csv(path, df):
-    """
-    Given the path to a stored csv, update the data in it to
-    include additional data provided by the given dataframe.
-
-    This function assumes that there is a simple way for the pandas merge
-    function to merge the data
-    """
-    pass
-
-
 def write_track_info_additional_info(category, drop_columns=None):
+    """
+    Add additional info from the general track info into an existing category
+    csv. The drop_columns parameter is used for merging, where it drops any
+    unwanted columns in the combined dataset
+    """
     file_path = f'{AUDIO_FEATURES_DIR}/{category}.csv'
     # Check if file exists or not, and if yet, if the additional values exist
-    # new_fields = ['popularity', 'explicit']
     audio_feats_df = read_audio_features_for_category(category)
     gen_info_df = get_category_general_track_info(category)
     audio_feats_df = audio_feats_df.drop_duplicates(subset=['id'])
@@ -147,6 +149,10 @@ def write_track_info_additional_info(category, drop_columns=None):
 
 
 def write_all_categories_addl_general_info(drop_columns=None):
+    """
+    For all of the categories, go through and update corresponding csvs
+    with additional general track info, in particular, popularity and explicit
+    """
     categories = read_categories()
     for category in categories:
         if category in UNAVAILABLE_CATEGORIES:
@@ -173,6 +179,9 @@ def read_audio_features_for_category(category):
     return df
 
 def get_all_audio_feats_in_all_categories():
+    """
+    Grab all of the csvs and return them in a list of pandas dataframes
+    """
     categories = read_categories()
     categories = list(set(categories) - set(UNAVAILABLE_CATEGORIES))
     dfs = [read_audio_features_for_category(cat) for cat in categories]
