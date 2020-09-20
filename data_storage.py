@@ -81,6 +81,15 @@ def read_categories():
     return categories
 
 
+def get_category_audio_tracks_df(category):
+    tracks_audio_features = get_tracks_audio_features_from_category(category)
+    unneeded_fields = ['type', 'uri', 'track_href', 'analysis_url']
+    for track_audio_features in tracks_audio_features:
+        for field in unneeded_fields:
+            track_audio_features.pop(field)
+    return pd.DataFrame(tracks_audio_features)
+
+
 @write_new_data(AUDIO_FEATURES_DIR)
 def write_category_tracks_audio_features(category, overwrite=False):
     file_path = f'{AUDIO_FEATURES_DIR}/{category}.csv'
@@ -88,22 +97,21 @@ def write_category_tracks_audio_features(category, overwrite=False):
         print(f'{file_path} already exists, not overwriting')
         return
 
-    tracks_audio_features = get_tracks_audio_features_from_category(category)
-    unneeded_fields = ['type', 'uri', 'track_href', 'analysis_url']
-    for track_audio_features in tracks_audio_features:
-        for field in unneeded_fields:
-            track_audio_features.pop(field)
-    df = pd.DataFrame(tracks_audio_features)
+    df = get_category_audio_tracks_df(category)
     print(f'Writing to {file_path}')
     df.to_csv(file_path)
 
 
 def get_category_general_track_info(category):
+    print(f'Getting general track info for {category}')
     tracks = get_all_songs_in_category(category)
     tracks_info = [track['track'] for track in tracks]
     useful_fields = ['popularity', 'explicit', 'id']
     parsed_tracks = []
     for track_info in tracks_info:
+        if not track_info:
+            print('No track info found')
+            continue
         parsed_track = {}
         for field in useful_fields:
             parsed_track[field] = track_info[field]
@@ -134,8 +142,17 @@ def write_track_info_additional_info(category, drop_columns=None):
     combined_df = audio_feats_df.merge(gen_info_df, how='inner')
     if drop_columns:
         combined_df = combined_df.loc[:, ~combined_df.columns.str.contains(drop_columns)]
-    print(f'Merged gen info and audio feats dfs and writing to {file_path}')
+    print(f'Updating {file_path} with general info')
     combined_df.to_csv(file_path)
+
+
+def write_all_categories_addl_general_info(drop_columns=None):
+    categories = read_categories()
+    for category in categories:
+        if category in UNAVAILABLE_CATEGORIES:
+            print(f'Skipping {category}')
+            continue
+        write_track_info_additional_info(category, drop_columns=drop_columns)
 
 
 def write_all_category_audio_features(overwrite=False):
@@ -155,6 +172,11 @@ def read_audio_features_for_category(category):
     df = pd.read_csv(file_path)
     return df
 
+def get_all_audio_feats_in_all_categories():
+    categories = read_categories()
+    categories = list(set(categories) - set(UNAVAILABLE_CATEGORIES))
+    dfs = [read_audio_features_for_category(cat) for cat in categories]
+    return dfs
 
 def read_all_category_audio_features():
     categories = read_categories()
