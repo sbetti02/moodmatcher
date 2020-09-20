@@ -28,6 +28,12 @@ UNAVAILABLE_CATEGORIES = [
     'french_variety',
     'student'
 ]
+POSSIBLY_DEPRECATED_CATEGORIES = [
+    'kpop',
+    'roots',
+    'soul'
+]
+
 
 
 def write_new_data(base_dir):
