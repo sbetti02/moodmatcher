@@ -3,7 +3,9 @@ import os
 
 import pandas as pd
 
-from category_parser import get_all_categories, get_tracks_audio_features_from_category
+from category_parser import (get_all_categories,
+                             get_tracks_audio_features_from_category,
+                             get_all_songs_in_category)
 
 DATA_DIR = './data'
 AUDIO_FEATURES_DIR = f'{DATA_DIR}/Audio_Features'
@@ -94,6 +96,46 @@ def write_category_tracks_audio_features(category, overwrite=False):
     df = pd.DataFrame(tracks_audio_features)
     print(f'Writing to {file_path}')
     df.to_csv(file_path)
+
+
+def get_category_general_track_info(category):
+    tracks = get_all_songs_in_category(category)
+    tracks_info = [track['track'] for track in tracks]
+    useful_fields = ['popularity', 'explicit', 'id']
+    parsed_tracks = []
+    for track_info in tracks_info:
+        parsed_track = {}
+        for field in useful_fields:
+            parsed_track[field] = track_info[field]
+        parsed_tracks.append(parsed_track)
+    df = pd.DataFrame(parsed_tracks)
+    return df
+
+
+def add_data_to_stored_csv(path, df):
+    """
+    Given the path to a stored csv, update the data in it to
+    include additional data provided by the given dataframe.
+
+    This function assumes that there is a simple way for the pandas merge
+    function to merge the data
+    """
+    pass
+
+
+def write_track_info_additional_info(category, drop_columns=None):
+    file_path = f'{AUDIO_FEATURES_DIR}/{category}.csv'
+    # Check if file exists or not, and if yet, if the additional values exist
+    # new_fields = ['popularity', 'explicit']
+    audio_feats_df = read_audio_features_for_category(category)
+    gen_info_df = get_category_general_track_info(category)
+    audio_feats_df = audio_feats_df.drop_duplicates(subset=['id'])
+    gen_info_df = gen_info_df.drop_duplicates(subset=['id'])
+    combined_df = audio_feats_df.merge(gen_info_df, how='inner')
+    if drop_columns:
+        combined_df = combined_df.loc[:, ~combined_df.columns.str.contains(drop_columns)]
+    print(f'Merged gen info and audio feats dfs and writing to {file_path}')
+    combined_df.to_csv(file_path)
 
 
 def write_all_category_audio_features(overwrite=False):

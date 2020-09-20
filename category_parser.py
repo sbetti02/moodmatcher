@@ -4,6 +4,13 @@ from spotify_lib import connect, get_header
 from utils import get_paginated_results, make_chunks
 
 
+def get_track(id):
+    connect()
+    response = requests.get(f'https://api.spotify.com/v1/tracks/{id}', headers=get_header())
+    resp_json = response.json()
+    return resp_json
+
+
 def get_tracks_in_playlist(playlist_id):
     """
     Get all the track dicts for a particular playlist, return
@@ -67,6 +74,7 @@ def get_tracks_audio_features(track_ids):
     """
     connect()
     url = 'https://api.spotify.com/v1/audio-features/'
+    # Max that can be submitted to this endpoint is 100 at a time
     track_groups = make_chunks(track_ids, 100)
     audio_features = []
     for group in track_groups:
@@ -78,6 +86,27 @@ def get_tracks_audio_features(track_ids):
         if resp_json.get('audio_features'):
             audio_features.extend(resp_json['audio_features'])
     return audio_features
+
+
+def get_general_info_mult_tracks(track_ids):
+    """
+    Given the track ids, return a flat list with the general information
+    provided by Spotify's /tracks endpoint
+    """
+    connect()
+    url = 'https://api.spotify.com/v1/tracks'
+    # Max that can be submitted to this endpoint is 50 at a time
+    track_groups = make_chunks(track_ids, 50)
+    track_details = []
+    for group in track_groups:
+        query_params = {'ids': ','.join(group)}
+        response = requests.get(
+            url, params=query_params, headers=get_header()
+        )
+        resp_json = response.json()
+        if resp.get('tracks'):
+            track_details.extend(resp_json['tracks'])
+    return track_details
 
 
 def get_tracks_audio_features_from_category(category):
