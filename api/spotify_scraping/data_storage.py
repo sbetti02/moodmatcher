@@ -3,9 +3,9 @@ import os
 
 import pandas as pd
 
-from category_parser import (get_all_categories,
-                             get_tracks_audio_features_from_category,
-                             get_all_songs_in_category)
+from spotify_scraping.category_parser import (get_all_categories,
+                                              get_tracks_audio_features_from_category,
+                                              get_all_songs_in_category)
 
 DATA_DIR = './data'
 AUDIO_FEATURES_DIR = f'{DATA_DIR}/Audio_Features'

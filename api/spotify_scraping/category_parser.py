@@ -1,7 +1,7 @@
 import requests
 
-from spotify_lib import connect, get_header
-from utils import get_paginated_results, make_chunks
+from spotify_scraping.spotify_lib import connect, get_header
+from spotify_scraping.utils import get_paginated_results, make_chunks
 
 
 def get_track(id):
