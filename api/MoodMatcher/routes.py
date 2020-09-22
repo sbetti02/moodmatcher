@@ -28,4 +28,3 @@ def get_track_info(track):
         'Artist(s)': artists,
         'Title': track_info['name']
     })
-    # return jsonify(get_track(track))
