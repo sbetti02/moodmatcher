@@ -1,6 +1,6 @@
 import requests
 
-from spotify_lib import get_header
+from spotify_scraping.spotify_lib import get_header
 
 
 def get_paginated_results(url, obj_type=None):

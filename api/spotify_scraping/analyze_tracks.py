@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
-from category_parser import get_tracks_audio_features_from_category
+from spotify_scraping.category_parser import get_tracks_audio_features_from_category
 
 
 def get_feature_info(category):

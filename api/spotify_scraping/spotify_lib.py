@@ -1,8 +1,8 @@
 import base64
 import requests
 
-from exceptions import AuthError
-from secrets import SPOT_CLIENT_ID, SPOT_CLIENT_SECRET
+from spotify_scraping.exceptions import AuthError
+from spotify_scraping.secrets import SPOT_CLIENT_ID, SPOT_CLIENT_SECRET
 
 
 ACCESS_TOKEN = None
