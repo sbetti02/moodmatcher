@@ -23,6 +23,9 @@ def cat_track_features(category):
 @app.route('/<track>/info')
 def get_track_info(track):
     track_info = get_track(track)
+    if track_info.get('error'):
+        return track_info['error']
+
     artists = [artist['name'] for artist in track_info['artists']]
     return jsonify({
         'artists': artists,
