@@ -1,19 +1,20 @@
 import React, { useState, useEffect } from 'react';
 
+import SearchBox from './searchbox.js';
 import './App.css';
 
 function App() {
-  const [currentTrack, setCurrentTrack] = useState({});
-
-  useEffect(() => {
-    fetch('/70eFcWOvlMObDhURTqT4Fv/info')
-      .then(res => res.json())
-      .then(data => setCurrentTrack(data));
-  }, []);
+  const [tracks, setTracks] = useState([]);
 
   return (
     <div className="App">
-      <p>Current track: { currentTrack.artists }: { currentTrack.title } </p>
+      <p />
+      <SearchBox tracks={tracks}
+                 setTracks={setTracks}/>
+      {tracks.map((track, index) =>
+        <li key={ index }>{ track.artists }: { track.title }</li>
+      )}
+
     </div>
   );
 }
