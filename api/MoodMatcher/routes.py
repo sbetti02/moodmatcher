@@ -25,6 +25,6 @@ def get_track_info(track):
     track_info = get_track(track)
     artists = [artist['name'] for artist in track_info['artists']]
     return jsonify({
-        'Artist(s)': artists,
-        'Title': track_info['name']
+        'artists': artists,
+        'title': track_info['name']
     })
