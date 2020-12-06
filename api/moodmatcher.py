@@ -1,3 +1,3 @@
-from MoodMatcher import create_app
+from MoodMatcher import app
 
-app = create_app()
+# app = create_app()
