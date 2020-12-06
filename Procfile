@@ -1,1 +1,1 @@
-web: gunicorn --chdir ./api app:moodmatcher
+web: gunicorn --chdir ./api moodmatcher:app
