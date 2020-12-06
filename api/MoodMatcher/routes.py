@@ -1,4 +1,4 @@
-from flask import jsonify, current_app
+from flask import jsonify
 
 from MoodMatcher import app
 from spotify_scraping.category_parser import get_track

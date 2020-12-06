@@ -4,7 +4,6 @@ import requests
 from MoodMatcher import app
 
 from spotify_scraping.exceptions import AuthError
-# from spotify_scraping.secrets import SPOT_CLIENT_ID, SPOT_CLIENT_SECRET
 
 
 ACCESS_TOKEN = None
@@ -21,8 +20,6 @@ def connect():
 
     if ACCESS_TOKEN is not None:
         return
-    
-
 
     auth_str = f"{app.config['SPOT_CLIENT_ID']}:{app.config['SPOT_CLIENT_SECRET']}"
     b64_auth_str = base64.b64encode(auth_str.encode()).decode()
