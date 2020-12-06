@@ -6,6 +6,8 @@ app = Flask(__name__)
 app.config['SPOT_CLIENT_ID'] = os.environ['SPOT_CLIENT_ID']
 app.config['SPOT_CLIENT_SECRET'] = os.environ['SPOT_CLIENT_SECRET']
 
+from MoodMatcher import routes
+
 # class HerokuConfig:
 #     SPOT_CLIENT_ID = os.environ['SPOT_CLIENT_ID']
 #     SPOT_CLIENT_SECRET = os.environ['SPOT_CLIENT_SECRET']
