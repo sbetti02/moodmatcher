@@ -23,7 +23,7 @@ def connect():
         return
     
 
-
+    print(app.config)
     auth_str = f"{app.config['SPOT_CLIENT_ID']}:{app.config['SPOT_CLIENT_SECRET']}"
     b64_auth_str = base64.b64encode(auth_str.encode()).decode()
 
