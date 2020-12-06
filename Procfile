@@ -1,1 +1,0 @@
-api: gunicorn --chdir ./api moodmatcher:app
