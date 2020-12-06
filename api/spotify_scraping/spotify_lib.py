@@ -1,8 +1,10 @@
 import base64
 import requests
 
+from flask import current_app
+
 from spotify_scraping.exceptions import AuthError
-from spotify_scraping.secrets import SPOT_CLIENT_ID, SPOT_CLIENT_SECRET
+# from spotify_scraping.secrets import SPOT_CLIENT_ID, SPOT_CLIENT_SECRET
 
 
 ACCESS_TOKEN = None
@@ -20,7 +22,7 @@ def connect():
     if ACCESS_TOKEN is not None:
         return
 
-    auth_str = f'{SPOT_CLIENT_ID}:{SPOT_CLIENT_SECRET}'
+    auth_str = f'{current_app.config['SPOT_CLIENT_ID']}:{current_app.config['SPOT_CLIENT_SECRET']}'
     b64_auth_str = base64.b64encode(auth_str.encode()).decode()
 
     response = requests.post(
