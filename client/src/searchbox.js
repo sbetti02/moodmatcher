@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 
-import { API_URL } from './util';
+import { API_BASE } from './util';
 
 
 function SearchBox(props) {
     const [search, setInput] = useState('');
-    let urlBase = API_URL ? API_URL : '';
+    let urlBase = API_BASE ? API_BASE : '';
     let url = `${urlBase}/${search}/info`
 
     const handleSearch = (e) => {
