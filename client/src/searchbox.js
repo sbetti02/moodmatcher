@@ -1,12 +1,16 @@
 import React, { useState, useEffect } from 'react';
 
+import { API_URL } from './util';
+
 
 function SearchBox(props) {
     const [search, setInput] = useState('');
+    let urlBase = API_URL ? API_URL : '';
+    let url = `${urlBase}/${search}/info`
 
     const handleSearch = (e) => {
         e.preventDefault();
-        fetch(`/${search}/info`)
+        fetch(url)
             .then(res => res.json())
             .then(data => {
                 if ('title' in data) {
